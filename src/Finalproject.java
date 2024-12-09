@@ -2,6 +2,11 @@ import javax.swing.*; // Provides GUI components
 import java.awt.*; // Provides Layout Utilities/Colors and system tray handling
 import java.awt.event.ActionEvent; // Handling User input
 import java.awt.event.ActionListener; // Handling User input
+import java.io.FileWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 public class Finalproject {
     private JFrame frame; // Frame Variable
@@ -258,6 +263,7 @@ public class Finalproject {
                     // Start or continue the countdown timer
                     if (countdownTimer == null || !countdownTimer.isRunning()) {
                         startCountdown();
+                        saveSales();
                     }
 
                 } catch (NumberFormatException ex) {
@@ -270,8 +276,42 @@ public class Finalproject {
             }
         }
     }
+    
+    private void saveSales() {
+        // File name
+        String fileName = "sales.txt";
 
- // Start the countdown timer
+        // Retrieve sales data from the text field
+        int sales;
+        try {
+            sales = Integer.parseInt(textField.getText());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a numeric value.");
+            return; // Exit the method if the input is invalid
+        }
+
+        // Prepare data to write to the file
+        String data = "Total Sales: " + sales + System.lineSeparator(); // Add a newline for separation
+
+        try {
+            // Write sales data to the file
+            try ( // Create a FileWriter object in append mode
+                    FileWriter writer = new FileWriter(fileName, true)) {
+                // Write sales data to the file
+                writer.write(data);
+                // Close the FileWriter to release resources
+            }
+
+            System.out.println("Sales data appended successfully!");
+
+        } catch (IOException e) {
+            // Handle exceptions
+            System.out.println("An error occurred while writing to the file.");
+
+        }
+    }
+
+    // Start the countdown timer
     private void startCountdown() {
         countdownTimer = new Timer(1000, new ActionListener() {
             @Override
@@ -291,22 +331,23 @@ public class Finalproject {
                             public void run() {
                                 JOptionPane.showMessageDialog(frame, "Only 10 minutes left!");
                             }
-                        });                                                                     
+                        });
                         tenMinutesWarningShown = false; // Set flag to false so it shows warning everytime
                     }
-                    
-                     if (timeInSeconds == 60 && !oneMinuteWarningShown) {
+
+                    if (timeInSeconds == 60 && !oneMinuteWarningShown) {
                         // Use a non-blocking JOptionPane so that the timer will still work even though there is a warning
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
                                 JOptionPane.showMessageDialog(frame, "Only 1 minute left!");
                             }
-                        });                                                                     
-                       
+                        });
+
                         oneMinuteWarningShown = false; // Set flag to false so it shows warning everytime
                     }
-                } if (timeInSeconds == 0) {
+                }
+                if (timeInSeconds == 0) {
                     countdownTimer.stop();
                     lockPC(); // Lock the PC
                 }
@@ -320,7 +361,6 @@ public class Finalproject {
         try {
             Runtime.getRuntime().exec("rundll32 user32.dll,LockWorkStation");
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
