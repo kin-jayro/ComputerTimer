@@ -13,3 +13,6 @@ depending on how much time you want to use that PC. 3. You can End the
 timer early, by pressing the END button and the PC will lock
 automatically. 4. You can extend your time, by inputting new price in
 the UI.
+
+-----------------Issues Fixed-----------------------
+Users now can't close the app when timer is running.
