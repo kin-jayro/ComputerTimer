@@ -16,3 +16,4 @@ the UI.
 
 -----------------Issues Fixed-----------------------
 Users now can't close the app when timer is running.
+*used a Boolean flag and an windows event listenner to check if timer is running.
