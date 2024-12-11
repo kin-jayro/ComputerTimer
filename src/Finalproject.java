@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 public class Finalproject {
     private JFrame frame; // Frame Variable
@@ -294,8 +295,8 @@ public class Finalproject {
                         // Start or continue the countdown timer
                         if (countdownTimer == null || !countdownTimer.isRunning()) {
                             startCountdown();
-                            saveSales();
                         }
+                        saveSales();
                         
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(frame, "Invalid input. Please enter a number.");
@@ -358,9 +359,39 @@ public class Finalproject {
                 }
             }
             salesData.append("Total Sales: P ").append(totalSales);
-            JOptionPane.showMessageDialog(null, salesData.toString(), "Sales Data", JOptionPane.INFORMATION_MESSAGE);
+            // Display sales data with a reset option
+            int option = JOptionPane.showOptionDialog(
+                    null,
+                    salesData.toString(),
+                    "Sales Data",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    new Object[]{"Close", "Reset"}, // Custom buttons
+                    "Close"
+            );
+
+            if (option == 1) { // Reset button clicked
+                // Reset the sales data
+                clearSales();
+
+                // Show message after reset
+                JOptionPane.showMessageDialog(null, "Sales Data Cleared.", "Sales Data", JOptionPane.INFORMATION_MESSAGE);
+            }
+
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "An error occurred while reading the file.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void clearSales() {
+        File file = new File("sales.txt");
+
+        try (FileWriter writer = new FileWriter(file)) {
+            // Overwriting the file with an empty string
+            writer.write("");
+            System.out.println("File content deleted successfully.");
+        } catch (IOException e) {
         }
     }
 
